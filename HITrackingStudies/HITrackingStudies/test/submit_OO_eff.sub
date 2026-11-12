@@ -1,0 +1,23 @@
+universe              = vanilla
+executable            = run_OO_eff_job.sh
+arguments             = $(ProcId) $(ClusterId)
+
+initialdir            = /afs/cern.ch/user/z/zzainula/Traking/CMSSW_15_0_11/src/HITrackingStudies/HITrackingStudies/test
+
+should_transfer_files = NO
+getenv                = True
+
+request_cpus          = 1
+request_memory        = 4000
+request_disk          = 5000000
+
++JobFlavour           = "workday"
+
+output                = logs/job_$(ClusterId)_$(ProcId).out
+error                 = logs/job_$(ClusterId)_$(ProcId).err
+log                   = logs/condor_$(ClusterId).log
+
+use_x509userproxy = true
+x509userproxy = $ENV(X509_USER_PROXY)
+
+queue 256

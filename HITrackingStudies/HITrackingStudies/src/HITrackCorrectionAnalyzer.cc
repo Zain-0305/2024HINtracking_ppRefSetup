@@ -102,7 +102,8 @@ class HITrackCorrectionAnalyzer : public edm::one::EDAnalyzer<edm::one::SharedRe
       double ptErrMax_;
       int    nhitsMin_;
       double chi2nMax_;      
-
+      int    pixhitsMin_;
+      
       bool doMomRes_;
 
       bool fillNTuples_;
@@ -141,6 +142,7 @@ dzErrMax_(iConfig.getParameter<double>("dzErrMax")),
 ptErrMax_(iConfig.getParameter<double>("ptErrMax")),
 nhitsMin_(iConfig.getParameter<int>("nhitsMin")),
 chi2nMax_(iConfig.getParameter<double>("chi2nMax")),
+pixhitsMin_(iConfig.getParameter<int>("pixhitsMin")),
 doMomRes_(iConfig.getParameter<bool>("doMomRes")),
 fillNTuples_(iConfig.getParameter<bool>("fillNTuples")),
 useCentrality_(iConfig.getParameter<bool>("useCentrality")),
@@ -414,7 +416,8 @@ HITrackCorrectionAnalyzer::passesTrackCuts(const reco::Track & track, const reco
      }
    
    //~~~~~~~~~~~~~~~~~~~~~change by Raghunath to test the fake at hight pT~~~~~~~~~~~~~~~~~~~~~~~~~
-   
+   int pixhits = track.hitPattern().numberOfValidPixelHits();
+   if(pixhits < pixhitsMin_) return false;
    if(nhits < nhitsMin_ ) return false;
    int count = 0;
    for(unsigned i = 0; i < algoParameters_.size(); i++){
@@ -565,6 +568,7 @@ void HITrackCorrectionAnalyzer::fillDescriptions(edm::ConfigurationDescriptions&
    desc.add<double>("dzErrMax", 3.0);
    desc.add<double>("ptErrMax", 0.1);
    desc.add<int>("nhitsMin", 11);
+   desc.add<int>("pixhitsMin", 1);
    desc.add<double>("chi2nMax", 0.15);
    desc.add<bool>("doMomRes", false);
    desc.add<bool>("fillNTuples", false);
